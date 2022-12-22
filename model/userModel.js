@@ -183,7 +183,6 @@ async function cpassword(params,userData){
     return {data:"password changed succfully"}
 }
 
-
 //joi validation of forget password..
 async function verifyforgetPassword(params){
     let schema=joi.object({
