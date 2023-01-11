@@ -1,34 +1,50 @@
-let {Sequelize,Model,DataTypes,QueryTypes,sequelizelcon,Op}=require("../init/dbconfig")
-const { updated } = require("../model/categotirsModel")
+let { Sequelize, Model, DataTypes, QueryTypes, sequelizelcon, Op } = require("../init/dbconfig")
 
-class Categories extends Model{}
+
+class Categories extends Model { }
 Categories.init({
-    id:{type:DataTypes.INTEGER,
-        autoIncrement:true,
-        allowNull:false,
-        primaryKey:true},
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+    },
 
-    name:{type:DataTypes.STRING,
-        allowNull:false},
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
 
-    pid:{type:DataTypes.INTEGER,
-        allowNull:false},
+    pid: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
 
-    description:{type:DataTypes.STRING,
-        allowNull:false},
+    description: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
 
-    isActive:{type:DataTypes.BOOLEAN,
-        allowNull:true},
+    is_active: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+    },
 
-    isDeleted:{type:DataTypes.BOOLEAN,
-        allowNull:true},
+    is_deleted: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
 
-    createdBy:{type:DataTypes.INTEGER,
-        allowNull:false},
+    created_by: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
 
-    updatedBy:{type:DataTypes.INTEGER,
-        allowNull:false}
+    updated_by: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
 
-},{tableName:'Categories',modelName:"Categories",sequelize:sequelizelcon,Sequelize})
+}, { tableName: 'Categories', modelName: "Categories", sequelize: sequelizelcon, Sequelize })
 
-module.exports={Categories,Op}
+module.exports = { Categories, Op }
