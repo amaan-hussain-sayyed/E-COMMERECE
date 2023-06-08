@@ -1,7 +1,6 @@
 // this file for the authuntication of user for perfoming some task
 //the initialization of libarery and importing files 
-let { Sequelize, Model, DataTypes, QueryTypes, sequelizelcon } = require("../init/dbconfig")
-let bcrypt = require("bcrypt")
+let {  QueryTypes, sequelizelcon } = require("../init/dbconfig")
 let { decrypt } = require("../helper/security")
 //the initializaton of libarery and file ends here
 
@@ -53,6 +52,7 @@ function auth(primises) {
         next();
     }
 }
+
 
 //file exportation
 module.exports = { auth }

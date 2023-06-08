@@ -100,29 +100,32 @@ async function search(params) {
     }
 
     if (params.category_id) {
-
-        let check = await Product_category.findAll({ where: { id: { [Op.in]: params.category_id } } }).catch((err) => {
+        let check = await Product_category.findAll({ where: { category_id: { [Op.in]: params.category_id } }, raw: true }).catch((err) => {
             return { error: err }
 
         })
 
-        if (check || check.error) {
+        if (!check || (check && check.error)) {
+
             return { status: 400, error: "internal sever error" }
         }
-
-        if (check.length != params.category_id.length) {
-            return { status: 300, error: "category not found" }
+        let data = [];
+        for (let a of check) {
+            data.push(a.product_id)
         }
 
-        let find = await Products.findAll({ where: { id: { [Op.in]: check.product_id } } }).catch.error((err) => {
+        let find = await Products.findAll({ where: { id: { [Op.in]: data } } }).catch((err) => {
             return { error: err }
         })
-
-        if (!find || find.error) {
-            return { status: 300, error: "find not found" }
+        console.log(find)
+        if (!find || (find && find.error)) {
+            return { status: 300, error: "product not found" }
         }
         return { status: 200, data: find }
+
     }
+
+
     let result = {};
     if (params.name) {
         result = { where: { name: params.name } }
@@ -134,10 +137,11 @@ async function search(params) {
 
     if (!find || find.error) {
         console.log(find, "error")
-        return { status: 300, error: "find not found" }
+        return { status: 300, error: "not product found" }
     }
 
     return { data: find }
+
 
 
 }
@@ -217,6 +221,7 @@ async function update(params, userData) {
 
     return { data: "update product successfully" }
 }
+
 
 module.exports = {
     add, search, update

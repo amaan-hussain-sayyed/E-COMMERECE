@@ -8,18 +8,24 @@ function mailer(mailoption){
          auth:{
                 user:"hsayyedamaan@gmail.com",
                 pass:"ioikhovgzzjothdk"
-         }   
+         } 
          
         })
+
         transpoter.sendMail(mailoption,(error,info)=>{
+
             if(error){
-                reject(false)
+                reject("please try again")
             }
-            resolve(" send mail "+true)
+
+            resolve(" send mail ")
 
         })
     })
 }
+
+
+
 
 
 module.exports={mailer}

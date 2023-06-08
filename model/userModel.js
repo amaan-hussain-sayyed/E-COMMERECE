@@ -70,7 +70,7 @@ async function userregister(params) {
 async function verifylogin(params) {
     let schema = joi.object({
         email: joi.string().min(10).max(50).required(),
-        password: joi.string().min(9).max(12)
+        password: joi.string().min(9).max(12).required()
     })
 
     let verify = schema.validate(params, { abortEarly: false })
@@ -251,16 +251,17 @@ async function forgetPassword(params) {
 
 
 
-    let mailoption = {
+    let option = {
         from: "hsayyedamaan@gmail.com",
         to: user.email,
         subject: "forget password otp",
         text: `if you want to reset you password use this otp ${otp}`
     }
 
-    let sendmail = await mailer(mailoption).catch((err) => {
+    let sendmail = await mailer(option).catch((err) => {
         return { error: err }
     })
+
 
     if (!sendmail || sendmail.error) {
         return { error: sendmail.error }

@@ -1,7 +1,7 @@
 let express = require("express");
 let app = express()
-let {route}= require("./route")
+let { route } = require("./route")
 
 app.use(route);
 
-app.listen(3000,()=>{console.log("done")})
+app.listen(3001, () => { console.log("done") })
