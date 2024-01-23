@@ -12,48 +12,84 @@ let { User_permissions } = require("../schema/userPermissionSchema")
 
 //joi validation of user registeration...
 async function verifyregister(params) {
+
+    /**creating joi schema for  request  format */
     let schema = joi.object({
         email: joi.string().min(10).max(50).required(),
         password: joi.string().min(8).max(12).required(),
         name: joi.string().min(5).max(20).required(),
-        info: joi.string().min(3).max(300),
     })
+
+   /** valiting the schema from request*/
     let verify = schema.validate(params, { abortEarly: true })
-    if (verify.error) {
+
+    /**cheking the error or the validation in request  */
+    if (!verify || (verify && verify.error)) {
         let msg = [];
+       
+        /** pushing that error in msg veriable */
         for (let i of verify.error.details) {
             msg.push(i.message)
         }
+
         console.log(msg)
+
+        /** sending the msg veriable that store error masseg*/ 
         return { error: msg }
     }
+
+    /**if there everything is find send the verify that store the value of requset  */
     return { data: verify.value };
 }
+
 //verifying user regintration function...
 async function userregister(params) {
 
+    /** params store the req.body means request and verifying the request body  */
     let valide = await verifyregister(params).catch((err) => { return { error: err } });
 
-    if (valide.error) {
+    /**checkin is there request if not proper or some error  */
+    if (!valide || (valide && valide.error)) {
         console.log(valide.error)
-        return { error: valide.error }
+
+        /**if there was any problem retrun the error and the stop excuting the code */
+        return { error: valide.error , status:400}
     };
 
-    let password = await bcrypt.hash(params.password, 10).catch((err) => { return { error: err } })
-    if (!password || password.error) {
-        return { error: "try again" }
+    /**find in data base user table is there any user have the same email of the user request */
+    let find = await Users.findAll({ wherer: { email: params.email } }).catch(err => {
+        return {err}
+    })
+
+    /**checkin is any error in find the email in user table  */
+    if (find || (find && find.err)) {
+         /**if there was any problem retrun the error and the stop excuting the code */
+          return{error: "internal server error",status:500}
+    }
+    
+    /**params.pasword contain the password the user enter or send encoding the pasword before saving */
+    params.password = await bcrypt.hash(params.password, 10).catch((err) => { return { error: err } })
+
+    /** checkin is there any problem in encoding the password */
+    if (!params.password || (params.password && params.password.error)) {
+         /**if there was any problem retrun the error and the stop excuting the code */
+        return { error:"internal server error" ,status:500}
     }
 
-    params.password = password
 
+    /**inserting the user details that we have in params in users Table  */
     let user = await Users.create(params).catch((err) => { return { error: err } });
 
-    if (user.error) {
+    /** checkin is there any problem in inserting the user details in users table */
+    if (!user || (user && user.error)) {
         console.log(user.error)
-        return ({ error: "server is not conected" })
+
+         /** if there are some error   */
+        return ({ error: "Internal server error",status:500 })
     };
 
-    let permission = await User_permissions.create({ user_id: user.id, permission_id: 4 }).catch((err) => {
+
+    let permission = await User_permissions.create({ user_id: user.id, permission_id: 1 }).catch((err) => {
         return { error: err }
     })
 

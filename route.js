@@ -1,6 +1,6 @@
 let express = require("express");
 let { auth } = require("./middelwayyer/auth");
-
+let config = require("config")
 // from user controller...
 let { register,
     login,
